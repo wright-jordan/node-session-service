@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "node-session-service",
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
@@ -11,5 +11,8 @@
     "@types/node": "^18.0.0",
     "prettier": "2.8.7",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "some-errors": "github:wright-jordan/some-errors#semver:^0.1.0"
   }
 }
