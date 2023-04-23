@@ -2,16 +2,34 @@ import http from "node:http";
 import { SomeErrors } from "some-errors";
 
 export type Data = {
-  absoluteDeadline: number;
-  idleDeadline: number;
-  renewalDeadline: number;
-  isRetired: boolean;
-  loginID: string;
+  /**
+   * ID for the individual `Session.Data` object.
+   */
   id: string;
+  /**
+   * The number of ms since the epoch at which the session will be expired, regardless of activity.
+   */
+  absoluteDeadline: bigint;
+  /**
+   * The number of ms since the epoch at which the session will be expired if it remains inactive.
+   */
+  idleDeadline: bigint;
+  /**
+   * The number of ms since the epoch at which a new associated data object will be created.
+   */
+  renewalDeadline: bigint;
+  /**
+   * Indicates whether the data object has been renewed or regenerated.
+   */
+  isRetired: boolean;
+  /**
+   * Defaults to an empty string and remains so until an associated data object is created.
+   * This can be done with renewal or regeneration.
+   */
+  groupID: string;
 };
 
 export type Session<D extends Data> = {
-  id: string;
   sig: string;
   data: D;
   isNew: boolean;
@@ -45,6 +63,7 @@ export type Service<D extends Data> = {
    *
    * Will update the id of an old session if `isRegenerable` is true and `sess.isNew` is false.
    * It is generally a good idea to set `isRegenerable` after changes to authorization level (e.g. after login).
+   * This will also create a new `sess.data.groupID` if it is occurs before the first renewal.
    *
    * If `err` is not null, then the operation failed.
    */
